@@ -8,17 +8,6 @@ const firebaseConfig = {
     appId: "1:71185740446:web:10b9fdee63c0331d75c18f"
   };
 firebase.initializeApp(firebaseConfig); 
-var userName = localStorage.getItem("nome");
-document.getElementById("userName").innerHTML="Boas Vindas "+ userName +"!!!";
-
-function addRoom(){
-    roomName = document.getElementById("roomName").value;
-    firebase.database().ref("/").child(roomName).update({ /* acessa o firebase, vai na pasta principal depois cria outra pasta com o nome passado */
-        sala:"sala adicionada"
-    });
-    localStorage.setItem("roomName", roomName);
-    window.location="conversa.html";
-}
 
 function getData(){
     firebase.database().ref("/").on('value', function(snapshot){
@@ -32,31 +21,28 @@ function getData(){
         });
     });
 }
+
+
+var userName = localStorage.getItem("nome");
+document.getElementById("userName").innerHTML="Boas Vindas "+ userName +"!!!";
+
+function addRoom(){
+    roomName = document.getElementById("roomName").value;
+    firebase.database().ref("/").child(roomName).update({ /* acessa o firebase, vai na pasta principal depois cria outra pasta com o nome passado */
+        sala:"sala adicionada"
+    });
+    localStorage.setItem("roomName", roomName);
+    window.location="conversa.html";
+}
+
 getData();
+
 function redirecionarParaSala(name){
     console.log(name);
     roomName=name;
     localStorage.setItem("roomName", roomName);
     window.location="conversa.html";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function logout(){
     localStorage.removeItem("nome");
