@@ -1,62 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Salas Talk-Me </title>
-        <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+const firebaseConfig = {
+    apiKey: "AIzaSyC0N56N0K_zfccnpYXfeGwNT05yfZ6xQGA",
+    authDomain: "talkme-c3c56.firebaseapp.com",
+    databaseURL: "https://talkme-c3c56-default-rtdb.firebaseio.com",
+    projectId: "talkme-c3c56",
+    storageBucket: "talkme-c3c56.appspot.com",
+    messagingSenderId: "71185740446",
+    appId: "1:71185740446:web:10b9fdee63c0331d75c18f"
+  };
+firebase.initializeApp(firebaseConfig); 
 
-        <link href="https://fonts.googleapis.com/css?family=Yeon+Sung&display=swap" rel="stylesheet"><meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-        <link rel="stylesheet" type="text/css" href="style.css">
-
-    </head>
-    <body>
-
-
-        <div class="container">
-            <div id=logoutDiv>
-                <button id="logout" onclick="logout()"> Logout </button>
-            </div>
-            
-            
-
-            <center>
-                <div id="divMain">
-                    <h1  class="header">	
-                        Talk-Me
-                        <sup>
-                            <!--a tag <sup> é utilizada para escrever um texto com letras menores e com o 
-                            alinhamento acima das que do resto do documento-->	
-                            <img src="envelope.png">
-                        </sup>
-                    </h1>
-                    <h3 id="userName" class="color_white"></h3>
-    
-                    <div class="form-group input_div_room_page">
-                        <label> Adicionar Sala:</label>
-                        <input type="text" id="roomName" class="form-control" placeholder="#Nome da Sala">
-                    </div>
-                    
-                    <button onclick="addRoom()" id="adicionarNovaSala"> Adicionar Sala </button>
-    
-                    <h3 class="color_white"> Salas Bombando: </h3>
-    
-                    <div id="output"></div>
-                </div>
-                
-                
-            </center>
-        </div>
+function getData(){
+    firebase.database().ref("/").on('value', function(snapshot){
+        document.getElementById("output").innerHTML="";
+        snapshot.forEach(function(childSnapshot){
+            childKey=childSnapshot.key;
+            roomNames = childKey;
+            console.log(roomNames);
+            row="<div class='divRoomName' id="+roomNames+" onclick='redirecionarParaSala(this.id)'>#"+roomNames+"</div> <br>";
+            document.getElementById("output").innerHTML+=row;
+        });
+    });
+}
 
 
-        <script src="room.js"></script>
-    </body>
-</html>
+var userName = localStorage.getItem("nome");
+document.getElementById("userName").innerHTML="Boas Vindas "+ userName +"!!!";
+
+function addRoom(){
+    roomName = document.getElementById("roomName").value;
+    firebase.database().ref("/").child(roomName).update({ /* acessa o firebase, vai na pasta principal depois cria outra pasta com o nome passado */
+        sala:"sala adicionada"
+    });
+    localStorage.setItem("roomName", roomName);
+    window.location="conversa.html";
+}
+
+getData();
+
+function redirecionarParaSala(name){
+    console.log(name);
+    roomName=name;
+    localStorage.setItem("roomName", roomName);
+    window.location="conversa.html";
+}
+
+
+
+
+
+
+function logout(){
+    localStorage.removeItem("nome");
+    localStorage.removeItem("sala");
+    window.location="index.html";
+}
