@@ -39,25 +39,6 @@ function redirecionarParaSala(name){
     localStorage.setItem("roomName", roomName);
     window.location="conversa.html";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function logout(){
     localStorage.removeItem("nome");
     localStorage.removeItem("sala");
